@@ -1,0 +1,22 @@
+{
+  "primary": {
+    "url": "https://github.com/CuboiLeo/SuperMimic-Reproduced.git",
+    "commit": "d9be385b3eeb13a638fb33fb200d3bfd9be9839f"
+  },
+  "reference": {
+    "url": "https://github.com/zita-ch/supermimic_vibed.git",
+    "commit": "a1508d42c9d1699a52e8233ab16d08c488441ab9"
+  },
+  "soma-retargeter": {
+    "url": "https://github.com/NVIDIA/soma-retargeter.git",
+    "commit": "cbdb2b494a2af82137bf9b6f15122d60167281c4"
+  },
+  "a3-sonic": {
+    "url": "https://github.com/AgibotTech/sonic_for_a3.git",
+    "commit": "c9df753d31ef63c930b825b1b6767cabd37c1549"
+  },
+  "x2-sonic": {
+    "url": "https://github.com/meetsitaram/sonic-x2.git",
+    "commit": "c9959443f80276533083a8b31ecd3760a41eaa65"
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "scope": "Simulation engineering reproduction; anchor_obs enabled. BONES capture-group validation is used for checkpoint selection, not an untouched final test.",
+  "robots": {
+    "g1": {
+      "lafan_baseline": {
+        "clips": 40,
+        "failed": 0,
+        "mean_norm_return": 0.907358811193504,
+        "step_weighted_norm_return": 0.9095489111784152,
+        "completion_fraction": 1.0,
+        "full_clip_weighted_return": 0.9095489111784152,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.008648387630317543,
+          "motion_global_root_ori": 0.00973781999556104,
+          "motion_body_pos": 0.019509432238756803,
+          "motion_body_ori": 0.0174089586291054,
+          "motion_body_lin_vel": 0.018771512094291787,
+          "motion_body_ang_vel": 0.018097402303958298,
+          "action_rate_l2": -0.0011175858372924668,
+          "joint_limit": -0.00010104003685493658
+        }
+      },
+      "expanded": {
+        "lafan": {
+          "clips": 40,
+          "failed": 2,
+          "mean_norm_return": 0.9036944600935669,
+          "step_weighted_norm_return": 0.906136942842785,
+          "completion_fraction": 0.9848823502742894,
+          "full_clip_weighted_return": 0.8924382819373615,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.008268391614839691,
+            "motion_global_root_ori": 0.009722067126111702,
+            "motion_body_pos": 0.01954112982104108,
+            "motion_body_ori": 0.01760568138525091,
+            "motion_body_lin_vel": 0.01869090486575557,
+            "motion_body_ang_vel": 0.018080120672785256,
+            "action_rate_l2": -0.001159572690985094,
+            "joint_limit": -0.0001350388659240788
+          }
+        },
+        "heldout": {
+          "clips": 198,
+          "failed": 1,
+          "mean_norm_return": 0.9248813629490933,
+          "step_weighted_norm_return": 0.9311048665553967,
+          "completion_fraction": 0.9964082571738991,
+          "full_clip_weighted_return": 0.9277605773305987,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.008782986984867649,
+            "motion_global_root_ori": 0.009712680059854756,
+            "motion_body_pos": 0.019678058399349007,
+            "motion_body_ori": 0.017602690966432792,
+            "motion_body_lin_vel": 0.01934788989121414,
+            "motion_body_ang_vel": 0.01879498924722935,
+            "action_rate_l2": -0.0006063199933790058,
+            "joint_limit": -0.00020248950357378478
+          }
+        }
+      },
+      "baseline_on_bones_validation": {
+        "clips": 198,
+        "failed": 1,
+        "mean_norm_return": 0.8770994072357359,
+        "step_weighted_norm_return": 0.8837315131036935,
+        "completion_fraction": 0.9963826931680194,
+        "full_clip_weighted_return": 0.880534785063707,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.008253544971021121,
+          "motion_global_root_ori": 0.00937868342566654,
+          "motion_body_pos": 0.01938575697368491,
+          "motion_body_ori": 0.015121439910309897,
+          "motion_body_lin_vel": 0.01897000183740536,
+          "motion_body_ang_vel": 0.01823171841912354,
+          "action_rate_l2": -0.0007828761869496689,
+          "joint_limit": -0.00018511738040172655
+        }
+      },
+      "bones_training_clips": 1965,
+      "bones_training_hours": 4.460905555555556,
+      "lafan_baseline_sha256": "51ca0b25c43558127ef1971dd31510e6b5c6e574f2c700b92aa23eb91b55d17f",
+      "expanded_sha256": "9e49fc3c6f2153d53ea5a5d27915f3d6e1e677833f38fe2a6593680680cc3b3d",
+      "lafan_replay_fraction": null
+    },
+    "x2_ultra": {
+      "lafan_baseline": {
+        "clips": 40,
+        "failed": 2,
+        "mean_norm_return": 0.8303911814818378,
+        "step_weighted_norm_return": 0.8346340468456164,
+        "completion_fraction": 0.9800108808994877,
+        "full_clip_weighted_return": 0.8179504474778768,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.008179528474731634,
+          "motion_global_root_ori": 0.009389615474828007,
+          "motion_body_pos": 0.019091424693142994,
+          "motion_body_ori": 0.016238655965188285,
+          "motion_body_lin_vel": 0.017452729566668344,
+          "motion_body_ang_vel": 0.016026332002374768,
+          "action_rate_l2": -0.0022377646517951805,
+          "joint_limit": -0.0006771221902457907
+        }
+      },
+      "expanded": {
+        "lafan": {
+          "clips": 40,
+          "failed": 2,
+          "mean_norm_return": 0.8259314950026658,
+          "step_weighted_norm_return": 0.8301851207728246,
+          "completion_fraction": 0.9812735186108719,
+          "full_clip_weighted_return": 0.8146386745591412,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.007101723656280239,
+            "motion_global_root_ori": 0.009290115727517303,
+            "motion_body_pos": 0.019180586280988513,
+            "motion_body_ori": 0.016360476777072176,
+            "motion_body_lin_vel": 0.017535365165751743,
+            "motion_body_ang_vel": 0.016238424283218658,
+            "action_rate_l2": -0.0022029315822583756,
+            "joint_limit": -0.00048526149861179683
+          }
+        },
+        "heldout": {
+          "clips": 198,
+          "failed": 0,
+          "mean_norm_return": 0.9053347749788416,
+          "step_weighted_norm_return": 0.9073344144841043,
+          "completion_fraction": 1.0,
+          "full_clip_weighted_return": 0.9073344144841043,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.008261981555915503,
+            "motion_global_root_ori": 0.009596600705019153,
+            "motion_body_pos": 0.019544009431797064,
+            "motion_body_ori": 0.01742141187684114,
+            "motion_body_lin_vel": 0.01905076715354076,
+            "motion_body_ang_vel": 0.01823760288799753,
+            "action_rate_l2": -0.0009805526488309614,
+            "joint_limit": -0.0003983796582577872
+          }
+        }
+      },
+      "baseline_on_bones_validation": {
+        "clips": 198,
+        "failed": 1,
+        "mean_norm_return": 0.8719688745677722,
+        "step_weighted_norm_return": 0.8776189482337736,
+        "completion_fraction": 0.9982354520695078,
+        "full_clip_weighted_return": 0.8760703475349071,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.008184825756087803,
+          "motion_global_root_ori": 0.009277071790685784,
+          "motion_body_pos": 0.019269327926560005,
+          "motion_body_ori": 0.016166735469075665,
+          "motion_body_lin_vel": 0.018804661963677985,
+          "motion_body_ang_vel": 0.017804285747888345,
+          "action_rate_l2": -0.001169741509883596,
+          "joint_limit": -0.0005752688567879884
+        }
+      },
+      "bones_training_clips": 1976,
+      "bones_training_hours": 4.476172222222222,
+      "lafan_baseline_sha256": "215aa6bcd002606ee76f4c6db6496cedc144d9918fbaf1a8f631b26ceb9b2006",
+      "expanded_sha256": "d558749b149bb9c75b8c1e7c46e0877a560e58742bc26809cd9f2382be5f137d",
+      "lafan_replay_fraction": null
+    },
+    "a3": {
+      "lafan_baseline": {
+        "clips": 40,
+        "failed": 0,
+        "mean_norm_return": 0.8222730460480335,
+        "step_weighted_norm_return": 0.8284073439784563,
+        "completion_fraction": 1.0,
+        "full_clip_weighted_return": 0.8284073439784563,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.006558336599591842,
+          "motion_global_root_ori": 0.00939942068637928,
+          "motion_body_pos": 0.018918936385655276,
+          "motion_body_ori": 0.01593349017674068,
+          "motion_body_lin_vel": 0.017117604151345847,
+          "motion_body_ang_vel": 0.016932531061850005,
+          "action_rate_l2": -0.0016863971109559316,
+          "joint_limit": -0.00033318807362980483
+        }
+      },
+      "expanded": {
+        "lafan": {
+          "clips": 40,
+          "failed": 2,
+          "mean_norm_return": 0.8390907954996282,
+          "step_weighted_norm_return": 0.8454953933218294,
+          "completion_fraction": 0.9630321439905699,
+          "full_clip_weighted_return": 0.8142392413648716,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.007134066165081706,
+            "motion_global_root_ori": 0.009454234209417866,
+            "motion_body_pos": 0.01918210390013505,
+            "motion_body_ori": 0.016253465099098023,
+            "motion_body_lin_vel": 0.017293251765783595,
+            "motion_body_ang_vel": 0.017206317083767,
+            "action_rate_l2": -0.0017024135964457648,
+            "joint_limit": -0.0002714865358333679
+          }
+        },
+        "heldout": {
+          "clips": 198,
+          "failed": 1,
+          "mean_norm_return": 0.9130699557233504,
+          "step_weighted_norm_return": 0.9172978020446543,
+          "completion_fraction": 0.9992711649852315,
+          "full_clip_weighted_return": 0.916629243287554,
+          "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+          "terms": {
+            "motion_global_root_pos": 0.008579501796058563,
+            "motion_global_root_ori": 0.00961843430195111,
+            "motion_body_pos": 0.01945890311011121,
+            "motion_body_ori": 0.01725033706071967,
+            "motion_body_lin_vel": 0.019007390692534543,
+            "motion_body_ang_vel": 0.01871048843715714,
+            "action_rate_l2": -0.0007916598462202346,
+            "joint_limit": -0.0001036173958509526
+          }
+        }
+      },
+      "baseline_on_bones_validation": {
+        "clips": 198,
+        "failed": 3,
+        "mean_norm_return": 0.8377363719240235,
+        "step_weighted_norm_return": 0.8455352492429573,
+        "completion_fraction": 0.9881979873924329,
+        "full_clip_weighted_return": 0.8355562315712496,
+        "metric_note": "Upstream norm_return divides by executed steps; full_clip_weighted_return penalizes early termination.",
+        "terms": {
+          "motion_global_root_pos": 0.006926259997792326,
+          "motion_global_root_ori": 0.009328105639587074,
+          "motion_body_pos": 0.01893973970063373,
+          "motion_body_ori": 0.014603296277069829,
+          "motion_body_lin_vel": 0.01813627017574104,
+          "motion_body_ang_vel": 0.01804006374918534,
+          "action_rate_l2": -0.0010227819661840286,
+          "joint_limit": -0.00039743150786106864
+        }
+      },
+      "bones_training_clips": 9951,
+      "bones_training_hours": 21.51571111111111,
+      "lafan_baseline_sha256": "d39bd69fd8098714bc31ef6ead6764fa1da84baae83dd0c4a83d68dfcf5fafe7",
+      "expanded_sha256": "41d6f8365ff0eab5bbd3c3e5da1b04a679ac4819e9fb88a617f14e56a64b2053",
+      "lafan_replay_fraction": 0.5
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "import_folder": "data/lafan1-soma-aligned",
+  "export_folder": "data/lafan1-retarget-a3",
+  "batch_size": 32,
+  "retargeter": "Newton",
+  "retarget_source": "soma",
+  "retarget_target": "agibot-a3t3",
+  "retarget_source_facing_direction": "Mujoco",
+  "extra_robot_paths": []
+}
