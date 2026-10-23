@@ -39,3 +39,16 @@ These checks verify implementation behavior. They do not establish converged
 tracking quality, reproduce the historical benchmark scores, or validate hardware.
 The source-export check in `scripts/dev/check_source_distribution.py` runs the
 CPU/no-dataset suite in a clean Git archive using the installed dependencies.
+
+## Maintainer release check
+
+Ordinary users do not need this command. Before publishing source changes,
+maintainers can run:
+
+```bash
+bash scripts/run_local.sh scripts/dev/check_source_distribution.py
+```
+
+It checks that required Python files are tracked by Git and tests a clean archive
+of the staged source. This catches files that exist locally but would be absent
+from a clone, such as Python modules accidentally excluded by an ignore rule.

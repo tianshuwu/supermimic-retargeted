@@ -40,7 +40,7 @@ bash scripts/run_local.sh scripts/setup/build_robot_assets.py
 
 仅使用 G1 时，可在安装主环境后直接运行 `bash scripts/run_local.sh scripts/setup/build_robot_assets.py --robot g1`。机器人 XML、网格和生成记录保存在 `assets/robots/`；外部来源与数据处理细节见 [数据文档](docs/DATA.md)。
 
-后续示例使用 `scripts/run_local.sh` 调用当前仓库的 `.venv/`，清理外部 Python 环境变量，不重新解析依赖。已有自定义环境请按自己的 CUDA/驱动组合维护，不要直接套用另一台机器的版本说明。
+后续命令使用 `scripts/run_local.sh` 调用本仓库的 `.venv/`。
 
 ## 数据与权重
 
@@ -111,8 +111,6 @@ bash scripts/run_local.sh scripts/evaluation/render_policy.py --robot a3 \
 
 ```bash
 bash scripts/run_local.sh -m pytest tests -m "not gpu and not dataset and not slow" -q
-# 发布前从 Git 索引导出干净源码检查
-bash scripts/run_local.sh scripts/dev/check_source_distribution.py
 ```
 
 代码保留上游 MIT 许可，见 [LICENSE](LICENSE)。第三方工具、机器人资产、动作数据和演示素材保留其来源条款，见 [UPSTREAM.md](UPSTREAM.md)。
