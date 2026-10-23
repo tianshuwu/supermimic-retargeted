@@ -23,7 +23,13 @@ def main():
     p.add_argument("--npz-dir", type=Path)
     p.add_argument("--no-label", action="store_true", help="For ffmpeg builds without drawtext")
     p.add_argument("--azimuth", type=float, default=135)
+    p.add_argument(
+        "--distance", type=float, default=3.2,
+        help="Shared camera distance in metres for all robots",
+    )
     args = p.parse_args()
+    if args.distance <= 0:
+        p.error("--distance must be positive")
     ROOT = Path(__file__).resolve().parents[2]
     select_robot(args.robot, check_assets=True)
     os.environ["MUJOCO_GL"] = "egl"
@@ -76,7 +82,7 @@ def main():
     ghost_rgba = np.array([0.1, 0.8, 1.0, 0.32], dtype=np.float32)
     cam = mujoco.MjvCamera()
     cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-    cam.distance = 3.2 if args.robot != "x2_ultra" else 2.8
+    cam.distance = args.distance
     cam.azimuth = args.azimuth
     cam.elevation = -15
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -221,6 +227,9 @@ def main():
                 "terminated_or_truncated": stopped,
                 "mean_step_reward": sum(rewards) / max(1, len(rewards)),
                 "render_mode": "reference_ghost_overlay",
+                "camera": {
+                    "distance": args.distance, "azimuth": args.azimuth, "elevation": -15,
+                },
                 "reference_rgba": ghost_rgba.tolist(),
                 "reference_alignment": "Original world coordinates plus environment origin; no per-frame pose alignment or translation offset.",
                 "note": "Solid robot: closed-loop physical policy. Cyan translucent robot: kinematic reference, visual only and absent from physics contacts. One shared scene and camera. This video covers one excerpt, not the full benchmark.",

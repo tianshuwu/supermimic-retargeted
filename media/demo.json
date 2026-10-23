@@ -1,0 +1,102 @@
+{
+  "motion": "LAFAN1 dance1_subject1",
+  "duration_seconds": 20,
+  "source_interval_seconds": [
+    80.16,
+    100.16
+  ],
+  "frame_rate": 25,
+  "resolution": [
+    1280,
+    720
+  ],
+  "camera_distance_m": 3.2,
+  "camera_vertical_fov_degrees": 45,
+  "playback_speed": 1,
+  "render_mode": "solid physical policy + cyan kinematic reference ghost",
+  "notes": [
+    "Reference is visual only and does not participate in physics.",
+    "Reference and physical robot share world coordinates without per-frame pose alignment.",
+    "G1 and X2 use LAFAN policies; A3 uses an existing BONES continuation policy.",
+    "These are selected demonstration excerpts, not a full benchmark."
+  ],
+  "shots": [
+    {
+      "robot": "g1",
+      "source_start_seconds": 80.16,
+      "source_end_seconds": 83.36,
+      "output_start_seconds": 0.0,
+      "duration_seconds": 3.2
+    },
+    {
+      "robot": "x2_ultra",
+      "source_start_seconds": 83.36,
+      "source_end_seconds": 85.76,
+      "output_start_seconds": 3.2,
+      "duration_seconds": 2.4
+    },
+    {
+      "robot": "a3",
+      "source_start_seconds": 85.76,
+      "source_end_seconds": 87.76,
+      "output_start_seconds": 5.6,
+      "duration_seconds": 2.0
+    },
+    {
+      "robot": "g1",
+      "source_start_seconds": 87.76,
+      "source_end_seconds": 90.56,
+      "output_start_seconds": 7.6,
+      "duration_seconds": 2.8
+    },
+    {
+      "robot": "x2_ultra",
+      "source_start_seconds": 90.56,
+      "source_end_seconds": 92.56,
+      "output_start_seconds": 10.4,
+      "duration_seconds": 2.0
+    },
+    {
+      "robot": "a3",
+      "source_start_seconds": 92.56,
+      "source_end_seconds": 94.16,
+      "output_start_seconds": 12.4,
+      "duration_seconds": 1.6
+    },
+    {
+      "robot": "g1",
+      "source_start_seconds": 94.16,
+      "source_end_seconds": 96.56,
+      "output_start_seconds": 14.0,
+      "duration_seconds": 2.4
+    },
+    {
+      "robot": "x2_ultra",
+      "source_start_seconds": 96.56,
+      "source_end_seconds": 98.16,
+      "output_start_seconds": 16.4,
+      "duration_seconds": 1.6
+    },
+    {
+      "robot": "a3",
+      "source_start_seconds": 98.16,
+      "source_end_seconds": 100.16,
+      "output_start_seconds": 18.0,
+      "duration_seconds": 2.0
+    }
+  ],
+  "checkpoints": {
+    "g1": {
+      "stage": "LAFAN",
+      "sha256": "51ca0b25c43558127ef1971dd31510e6b5c6e574f2c700b92aa23eb91b55d17f"
+    },
+    "x2_ultra": {
+      "stage": "LAFAN",
+      "sha256": "215aa6bcd002606ee76f4c6db6496cedc144d9918fbaf1a8f631b26ceb9b2006"
+    },
+    "a3": {
+      "stage": "BONES continuation",
+      "sha256": "41d6f8365ff0eab5bbd3c3e5da1b04a679ac4819e9fb88a617f14e56a64b2053"
+    }
+  }
+}

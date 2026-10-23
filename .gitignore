@@ -25,3 +25,6 @@ id_ed25519*
 MUJOCO_LOG.TXT
 .DS_Store
 /videos/
+
+# Small, explicitly published demo asset
+!/media/demo.mp4

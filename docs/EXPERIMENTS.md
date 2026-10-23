@@ -22,3 +22,7 @@ Normalized return divides by executed steps, which can overstate an early-failin
 The observed scores do not establish superiority over SONIC or the paper: observations, robot models, subsets and validation selection differ. Data preparation and short demo clips are not substitutes for full motion rollouts or hardware validation.
 
 公开命令可用于从头训练。表中数字还依赖未随代码发布的训练状态，包括早期世界模型 warmstart；不能保证直接运行示例得到完全相同的数值。
+
+## Historical comparison
+
+![Paired simulation results](bones-comparison.png)
