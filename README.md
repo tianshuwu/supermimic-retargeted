@@ -101,7 +101,9 @@ A3/X2 使用串联关节与刚性脚底模型，关闭自碰撞、保留地面�
 ## 测试与许可
 
 ```bash
-uv run pytest tests/test_g1_fk.py tests/test_embodiments.py -q
+uv run pytest tests/test_g1_fk.py tests/test_embodiments.py tests/test_source_tracking.py -q
+# 发布前：从 Git 索引导出干净源码，检查导入、数据 CLI 和测试
+uv run python scripts/check_source_distribution.py
 ```
 
 训练代码保留上游 MIT 许可，见 [LICENSE](LICENSE)。第三方工具、机器人资产和数据保留各自许可，见 [UPSTREAM.md](UPSTREAM.md)。
