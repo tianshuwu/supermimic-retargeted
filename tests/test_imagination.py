@@ -7,7 +7,7 @@ import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-NPZ = ROOT / "data/npz/lafan1"
+NPZ = ROOT / "data/npz/g1/lafan1"
 
 
 def test_gae_targets_match_hand_computation():
@@ -30,7 +30,9 @@ def test_gae_targets_match_hand_computation():
     np.testing.assert_allclose(out1[0].numpy(), mc.numpy(), atol=1e-6)
 
 
-@pytest.mark.skipif(not torch.cuda.is_available() or not NPZ.exists(), reason="needs CUDA + LAFAN1 npz")
+@pytest.mark.gpu
+@pytest.mark.dataset
+@pytest.mark.skipif(not torch.cuda.is_available() or not any(NPZ.glob("*.npz")), reason="needs CUDA + LAFAN1 npz")
 def test_training_smoke(tmp_path):
     from supermimic.config import TrainConfig
     from supermimic.training.loop import Trainer
@@ -44,8 +46,10 @@ def test_training_smoke(tmp_path):
     cfg.policy.decoder_hidden = (256, 128)
     cfg.wm_trainer.batch_size = 256
     cfg.wm_trainer.batches_per_update = 2
+    cfg.wm_trainer.compile = None
     cfg.policy_trainer.batch_size = 128
     cfg.policy_trainer.horizon = 8
+    cfg.policy_trainer.compile = None
     cfg.schedule.total_iterations = 60
     cfg.schedule.warmup_iterations = 20
     cfg.schedule.log_interval = 20
@@ -55,11 +59,14 @@ def test_training_smoke(tmp_path):
         tr.run()
         assert tr.num_updates > 0
         assert (tmp_path / "smoke" / "ckpt_latest.pt").exists()
-        # Resume path works.
-        cfg2 = TrainConfig(**{**cfg.__dict__, "resume": tmp_path / "smoke" / "ckpt_latest.pt", "run_name": "smoke2"})
-        tr.env.close()
-        tr2 = Trainer(cfg2)
-        assert tr2.iteration == 60
-        tr2.env.close()
     finally:
-        pass
+        tr.env.close()
+        tr.writer.close()
+    # Resume path works, with the previous simulator released first.
+    cfg2 = TrainConfig(**{**cfg.__dict__, "resume": tmp_path / "smoke" / "ckpt_latest.pt", "run_name": "smoke2"})
+    tr2 = Trainer(cfg2)
+    try:
+        assert tr2.iteration == 60
+    finally:
+        tr2.env.close()
+        tr2.writer.close()

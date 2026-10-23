@@ -27,7 +27,7 @@ def init_distributed() -> tuple[int, int, int]:
         return 0, 0, 1
     rank = int(os.environ["RANK"])
     world = int(os.environ["WORLD_SIZE"])
-    pinned = os.environ.get("SM_GPU_PINNED") == "1"  # scripts/train.py set CUDA_VISIBLE_DEVICES=LOCAL_RANK
+    pinned = os.environ.get("SM_GPU_PINNED") == "1"  # scripts/training/train.py set CUDA_VISIBLE_DEVICES=LOCAL_RANK
     # Pinned: each process sees exactly one GPU (cuda:0). Otherwise modulo lets a 1-GPU box smoke-test.
     local_rank = 0 if pinned else int(os.environ["LOCAL_RANK"]) % max(torch.cuda.device_count(), 1)
     torch.cuda.set_device(local_rank)

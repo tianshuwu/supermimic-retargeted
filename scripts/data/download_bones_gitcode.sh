@@ -3,7 +3,7 @@
 set -euo pipefail
 unset HTTP_PROXY HTTPS_PROXY ALL_PROXY http_proxy https_proxy all_proxy
 export GIT_TERMINAL_PROMPT=0
-task_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+task_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)"
 task_repo="$task_root/data/bones-seed-gitcode"
 mkdir -p "$task_root/data" "$task_root/logs"
 exec > >(tee -a "$task_root/logs/bones-gitcode-download.log") 2>&1

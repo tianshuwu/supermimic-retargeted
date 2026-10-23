@@ -1,8 +1,8 @@
 """Batch-convert G1 retarget CSVs to mjlab-compatible 50 Hz motion npz files.
 
 Example:
-  uv run python scripts/data/csv_to_npz_batch.py --input-dir data/raw/lafan1/g1 \
-      --output-dir data/npz/lafan1 --input-fps 30 --workers 16
+  bash scripts/run_local.sh scripts/data/csv_to_npz_batch.py --input-dir data/lafan1-retargeted/g1 \
+      --output-dir data/npz/g1/lafan1 --input-fps 30 --workers 16
 
 Writes <output_dir>/<clip>.npz for every CSV and <output_dir>/manifest.csv.
 A per-clip fps override can be given with --fps-map (CSV with columns `name,fps`).
@@ -40,7 +40,15 @@ def _convert_one(args: tuple[str, str, float, float]) -> dict:
         info["ok"] = True
         info["error"] = ""
     except Exception as e:  # noqa: BLE001
-        info = {"source": src, "out": dst, "ok": False, "error": repr(e), "input_frames": 0, "output_frames": 0, "duration_s": 0.0}
+        info = {
+            "source": src,
+            "out": dst,
+            "ok": False,
+            "error": repr(e),
+            "input_frames": 0,
+            "output_frames": 0,
+            "duration_s": 0.0,
+        }
     return info
 
 
@@ -99,13 +107,23 @@ def main(
             n = int(d["joint_pos"].shape[0])
             fps = float(d["fps"][0])
             in_fps = float(d["input_fps"][0]) if "input_fps" in d else float("nan")
-        rows.append({"name": npz.stem, "frames": n, "fps": fps, "duration_s": (n - 1) / fps, "input_fps": in_fps})
+        rows.append(
+            {
+                "name": npz.stem,
+                "frames": n,
+                "fps": fps,
+                "duration_s": (n - 1) / fps,
+                "input_fps": in_fps,
+            }
+        )
     with open(output_dir / "manifest.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["name", "frames", "fps", "duration_s", "input_fps"])
         w.writeheader()
         w.writerows(rows)
     total_h = sum(r["duration_s"] for r in rows) / 3600.0
-    print(f"manifest: {len(rows)} clips, {total_h:.3f} h total, {len(failures)} failures, {time.time() - t0:.0f}s")
+    print(
+        f"manifest: {len(rows)} clips, {total_h:.3f} h total, {len(failures)} failures, {time.time() - t0:.0f}s"
+    )
 
 
 if __name__ == "__main__":

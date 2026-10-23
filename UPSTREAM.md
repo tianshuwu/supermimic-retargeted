@@ -17,6 +17,8 @@ Original paper: **SuperMimic: Scaling Humanoid Whole-Body Control with One Diffe
 
 Robot descriptions, meshes, datasets and third-party model weights are not redistributed here. Fetch them from the original projects and retain their licenses/notices; this repository's MIT license does not replace those terms. X2 reference files are fetched externally rather than relicensed as our own code.
 
+`scripts/setup/build_robot_assets.py` imports the installed mjlab G1 XML and mesh bundle into ignored `assets/robots/g1/`, retaining the distribution's license under `licenses/mjlab/` and recording source/version/file hashes in `source.json`. Runtime geometry comes from this local copy; G1 control and collision configuration still comes from the pinned mjlab package. Rebuilding preserves existing local G1 assets.
+
 LAFAN1 source: [Ubisoft](https://github.com/ubisoft/ubisoft-laforge-animation-dataset), revision `94084601bacdf9cc3764b5c73daaeccae6035fac`. G1 retargeted CSV source used in this experiment: [ModelScope](https://www.modelscope.cn/datasets/AI-ModelScope/LAFAN1_Retargeting_Dataset), revision `88771b167b7c5b87896fbef6799b3ae8150450e8`.
 
 BONES-SEED source: BONES Studio, `bones-studio/seed`. The optional GitCode mirror used for this run is pinned at `3347a32c4542a0a1165d6c4667ef631df2bc4c9d`. Dataset terms remain those of the dataset provider.

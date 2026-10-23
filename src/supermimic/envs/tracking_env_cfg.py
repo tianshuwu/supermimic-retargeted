@@ -13,11 +13,11 @@ Differences from mjlab's BeyondMimic re-implementation (``mjlab.tasks.tracking``
 
 from __future__ import annotations
 
-from supermimic.robot_dimensions import NJ, NQ, NV, STATE_DIM, FEAT_DIM, DELTA_DIM, XI_DIM, OBS_DIM, GOAL_FEAT_DIM, PROFILE, ROBOT
+from supermimic.robots.dimensions import NJ, NQ, NV, STATE_DIM, FEAT_DIM, DELTA_DIM, XI_DIM, OBS_DIM, GOAL_FEAT_DIM, PROFILE, ROBOT
 
 from dataclasses import dataclass, field
 
-from mjlab.asset_zoo.robots import G1_ACTION_SCALE, get_g1_robot_cfg
+from mjlab.asset_zoo.robots import G1_ACTION_SCALE
 from mjlab.envs import ManagerBasedRlEnv, ManagerBasedRlEnvCfg
 from mjlab.envs import mdp as base_mdp
 from mjlab.envs.mdp import dr
@@ -38,6 +38,7 @@ from supermimic.envs.actions import NoisyJointPositionActionCfg
 from supermimic.envs.mdp import observations as sm_obs
 from supermimic.envs.mdp import terminations as sm_term
 from supermimic.envs.mdp.commands import MultiClipMotionCommandCfg
+from supermimic.robots.assets import get_robot_cfg
 
 class QuietSimulationCfg(SimulationCfg):
     """SimulationCfg that disables MuJoCo Warp's per-step overflow printf (a kernel build-time constant,
@@ -70,13 +71,11 @@ FOOT_GEOM_REGEX = r"^(left|right)_foot[1-7]_collision$"
 
 
 if ROBOT != "g1":
-    from supermimic.robot_asset import get_robot_cfg
     TRACKED_BODIES = tuple(PROFILE["tracked_bodies"])
     ANCHOR_BODY = PROFILE["anchor_body"]
     ROOT_BODY = PROFILE["root_body"]
     FOOT_GEOM_REGEX = PROFILE["foot_geom_regex"]
     G1_ACTION_SCALE = PROFILE["action_scale"]
-    get_g1_robot_cfg = get_robot_cfg
 
 
 @dataclass
@@ -102,7 +101,7 @@ class SuperMimicEnvCfgArgs:
     bin_frames: int = 50
     compact_library: bool = False
     anchor_obs: bool = False  # add BeyondMimic anchor-relative pose (9) to the goal group (plan D5 alt.)
-    debug_vis: bool = False  # draw the reference ghost in the viewer (scripts/play.py)
+    debug_vis: bool = False  # draw the reference ghost in the viewer (scripts/evaluation/play.py)
     extra_command_kwargs: dict = field(default_factory=dict)
 
 
@@ -241,7 +240,7 @@ def make_env_cfg(a: SuperMimicEnvCfgArgs) -> ManagerBasedRlEnvCfg:
         recorders["replay"] = ReplayRecorderCfg(params={"capacity": a.replay_capacity, "foot_geom_regex": FOOT_GEOM_REGEX, "com_body_name": ANCHOR_BODY})
 
     cfg = ManagerBasedRlEnvCfg(
-        scene=SceneCfg(terrain=TerrainEntityCfg(terrain_type="plane"), num_envs=a.num_envs, entities={"robot": get_g1_robot_cfg()}),
+        scene=SceneCfg(terrain=TerrainEntityCfg(terrain_type="plane"), num_envs=a.num_envs, entities={"robot": get_robot_cfg()}),
         observations=observations,
         actions=actions,
         commands=commands,

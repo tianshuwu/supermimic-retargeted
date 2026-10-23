@@ -1,7 +1,7 @@
 """Watch a trained tracking policy replay reference clips in an interactive viewer.
 
-  uv run python scripts/play.py --ckpt logs/e5_bones_seed/ckpt_latest.pt --clips dance1_subject1
-  uv run python scripts/play.py --ckpt logs/e3_lafan1_40_anchor/ckpt_latest.pt --npz-dir data/npz/lafan1 --num-envs 4
+  bash scripts/run_local.sh scripts/evaluation/play.py --ckpt logs/e5_bones_seed/ckpt_latest.pt --clips dance1_subject1
+  python scripts/robot.py g1 scripts/evaluation/play.py --ckpt logs/e3_lafan1_40_anchor/ckpt_latest.pt --num-envs 4
 
 The grey/blue translucent robot is the reference pose; the solid robot is the policy.
 Deterministic evaluation settings (no noise, no DR); every reset starts the clip from its first frame.
@@ -23,6 +23,7 @@ from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
 from supermimic.envs import SuperMimicEnvCfgArgs, make_env
 from supermimic.envs.mdp.motion_library import discover_npz
 from supermimic.eval.benchmark import load_policy_from_checkpoint
+from supermimic.robots.paths import lafan_npz_dir
 
 
 class _DictPolicy:
@@ -38,7 +39,7 @@ class _DictPolicy:
 
 def main(
     ckpt: Path,
-    npz_dir: Path = Path("data/npz/lafan1"),
+    npz_dir: Path | None = None,
     clips: list[str] | None = None,
     num_envs: int = 1,
     device: str = "cuda:0",
@@ -46,7 +47,7 @@ def main(
     ghost: bool = True,
     sampling: Literal["start", "uniform"] = "start",
 ) -> None:
-    files = [str(f) for f in discover_npz(npz_dir, names=clips)]
+    files = [str(f) for f in discover_npz(npz_dir or lafan_npz_dir(), names=clips)]
     policy, cfg = load_policy_from_checkpoint(ckpt, device)
     args = SuperMimicEnvCfgArgs(
         npz_files=files,
@@ -66,7 +67,11 @@ def main(
     env = RslRlVecEnvWrapper(make_env(args, device=device))
     pol = _DictPolicy(policy)
     if viewer == "auto":
-        viewer = "native" if (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")) else "viser"
+        viewer = (
+            "native"
+            if (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"))
+            else "viser"
+        )
     print(f"[INFO] {len(files)} clip(s), {num_envs} env(s), viewer={viewer}")
     try:
         if viewer == "native":

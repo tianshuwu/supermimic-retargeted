@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-sm-train = "supermimic.scripts.train:main"
+sm-train = "supermimic.training.cli:main"
 
 [dependency-groups]
 dev = [
@@ -59,7 +59,11 @@ explicit = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["slow: long-running tests"]
+markers = [
+  "slow: long-running model fitting tests",
+  "gpu: requires CUDA",
+  "dataset: requires downloaded or prepared LAFAN data",
+]
 
 [tool.ruff]
 line-length = 100

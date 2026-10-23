@@ -24,7 +24,7 @@ Velocity definitions (as in mjlab):
 
 from __future__ import annotations
 
-from supermimic.robot_dimensions import NJ, NQ, NV, STATE_DIM, FEAT_DIM, DELTA_DIM, XI_DIM, OBS_DIM, GOAL_FEAT_DIM, PROFILE, ROBOT
+from supermimic.robots.dimensions import NJ, NQ, NV, STATE_DIM, FEAT_DIM, DELTA_DIM, XI_DIM, OBS_DIM, GOAL_FEAT_DIM, PROFILE, ROBOT
 
 import math
 from dataclasses import dataclass
@@ -33,6 +33,7 @@ from pathlib import Path
 import mujoco
 import numpy as np
 from scipy.spatial.transform import Rotation, Slerp
+from supermimic.robots.dimensions import robot_xml_path
 
 G1_JOINT_NAMES: tuple[str, ...] = (
     "left_hip_pitch_joint",
@@ -71,11 +72,8 @@ NUM_JOINTS = len(G1_JOINT_NAMES)
 
 
 def g1_xml_path() -> Path:
-    if ROBOT != "g1":
-        return Path(PROFILE["xml_path"])
-    import mjlab
-
-    return Path(mjlab.__file__).parent / "asset_zoo/robots/unitree_g1/xmls/g1.xml"
+    """Compatibility name for the active robot's repository-local XML."""
+    return robot_xml_path()
 
 
 def load_g1_model(xml_path: str | Path | None = None) -> mujoco.MjModel:
@@ -173,8 +171,11 @@ def load_csv(path: str | Path) -> np.ndarray:
         # centimeters -> metres, Euler 'xyz' degrees -> quaternion, joint degrees -> radians.
         df = pd.read_csv(path)
         cols = list(df.columns)
-        joint_cols = [c for c in cols if c.endswith("_joint_dof")]
+        joint_cols = [c for c in cols if c.endswith("_joint_dof") or c.endswith("_joint")]
         expected = [f"{n}_dof" for n in G1_JOINT_NAMES]
+        # SOMA exports the MJCF joint names directly; BONES G1 appends _dof.
+        if ROBOT == "g1" and all(n in cols for n in G1_JOINT_NAMES):
+            expected = list(G1_JOINT_NAMES)
         if ROBOT != "g1":
             expected = [f"{n}_dof" if f"{n}_dof" in cols else n for n in G1_JOINT_NAMES]
             joint_cols = expected

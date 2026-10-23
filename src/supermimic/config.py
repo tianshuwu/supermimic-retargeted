@@ -7,17 +7,20 @@ from pathlib import Path
 
 from supermimic.imagination.policy_trainer import PolicyTrainerCfg
 from supermimic.policy.nets import CriticCfg, PolicyCfg
+from supermimic.robots.paths import lafan_npz_dir, robot_name
 from supermimic.world_model.wm_trainer import WMTrainerCfg
 from supermimic.world_model.world_model import WorldModelCfg
 
 
 @dataclass
 class DataCfg:
-    npz_dir: Path = Path("data/npz/lafan1")
+    npz_dir: Path = field(default_factory=lafan_npz_dir)
     clips: list[str] | None = None  # None = all npz in npz_dir
     limit: int | None = None
     manifest: Path | None = None  # csv with name,keep (filter_bones_seed.py output)
-    library: Path | None = None  # packed compact library (.pt from build_library.py); overrides npz_dir
+    library: Path | None = (
+        None  # packed compact library (.pt from build_library.py); overrides npz_dir
+    )
 
 
 @dataclass
@@ -52,7 +55,7 @@ class ScheduleCfg:
 
 @dataclass
 class TrainConfig:
-    robot: str = field(default_factory=lambda: __import__("os").environ.get("SM_ROBOT", "g1"))
+    robot: str = field(default_factory=robot_name)
     run_name: str = "debug"
     log_root: Path = Path("logs")
     seed: int = 0
@@ -67,3 +70,25 @@ class TrainConfig:
     schedule: ScheduleCfg = field(default_factory=ScheduleCfg)
     resume: Path | None = None
     warmstart_world_model: Path | None = None
+
+
+def training_config(preset: str = "default") -> TrainConfig:
+    """Keep algorithm defaults and the bounded local validation preset together."""
+    cfg = TrainConfig()
+    if preset == "default":
+        return cfg
+    if preset != "smoke":
+        raise ValueError(f"Unknown training preset: {preset}")
+    cfg.run_name = f"{cfg.robot}_lafan_smoke"
+    cfg.env.num_envs = 128
+    cfg.env.replay_capacity = 256
+    cfg.wm_trainer.batch_size = 256
+    cfg.wm_trainer.batches_per_update = 2
+    cfg.wm_trainer.compile = None
+    cfg.policy_trainer.batch_size = 128
+    cfg.policy_trainer.compile = None
+    cfg.schedule.total_iterations = 100
+    cfg.schedule.log_interval = 20
+    cfg.schedule.checkpoint_interval = 100
+    cfg.schedule.max_hours = 1 / 6
+    return cfg

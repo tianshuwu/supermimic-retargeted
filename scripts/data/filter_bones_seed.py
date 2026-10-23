@@ -3,7 +3,7 @@
 Reads converted npz clips (50 Hz, with 30 body link states) and writes
 <npz_dir>/manifest_filtered.csv with one row per clip: name, frames, keep, reason.
 
-  uv run python scripts/data/filter_bones_seed.py --npz-dir data/npz/bones_seed --workers 24
+  bash scripts/run_local.sh scripts/data/filter_bones_seed.py --npz-dir data/npz/bones_seed --workers 24
 """
 
 from __future__ import annotations
@@ -19,12 +19,49 @@ import tyro
 # SONIC's keyword list (gear_sonic/data_process/filter_and_copy_bones_data.py) minus pure-acrobatics terms,
 # plus the paper's examples, underscore-delimited to avoid substring false positives (plan D16).
 SONIC_KEYWORDS = [
-    "bed", "bike", "chair", "climb", "com_up_50cm", "sitting", "step_on", "seat", "table", "_sit_", "sit_",
-    "ladder", "crutch", "_bed_", "_ride_", "scooter", "stepdown", "box_hspu", "50cm_box_", "on_box",
-    "fall_from", "on_1m", "form_box", "off_1m", "230m", "jump_over_obstacle_", "lift_crate_come_up_",
-    "stair", "box_jump", "box_dips", "walking_on_edge", "push_obstacle",
+    "bed",
+    "bike",
+    "chair",
+    "climb",
+    "com_up_50cm",
+    "sitting",
+    "step_on",
+    "seat",
+    "table",
+    "_sit_",
+    "sit_",
+    "ladder",
+    "crutch",
+    "_bed_",
+    "_ride_",
+    "scooter",
+    "stepdown",
+    "box_hspu",
+    "50cm_box_",
+    "on_box",
+    "fall_from",
+    "on_1m",
+    "form_box",
+    "off_1m",
+    "230m",
+    "jump_over_obstacle_",
+    "lift_crate_come_up_",
+    "stair",
+    "box_jump",
+    "box_dips",
+    "walking_on_edge",
+    "push_obstacle",
 ]
-REMOVED_ACROBATICS = ["acrobatics_", "cartwheel", "handstand", "handstand_ff_", "safety_roll", "kozak_dance", "jump_to_shoulder_roll", "monkey_jump"]
+REMOVED_ACROBATICS = [
+    "acrobatics_",
+    "cartwheel",
+    "handstand",
+    "handstand_ff_",
+    "safety_roll",
+    "kozak_dance",
+    "jump_to_shoulder_roll",
+    "monkey_jump",
+]
 PAPER_EXTRA = ["_box_", "box_", "_stair", "jump_off_50cm", "off_50cm", "fence", "look_over"]
 KEYWORDS = sorted(set(SONIC_KEYWORDS + PAPER_EXTRA))
 
@@ -58,9 +95,8 @@ def feasibility_filter(npz_path: str) -> str | None:
         quat = d["body_quat_w"]  # (T, 30, 4) wxyz
         jv = d["joint_vel"]
         lin = d["body_lin_vel_w"]
-    T = pos.shape[0]
     zmin = pos[:, :, 2].min(1)
-    lf, rf, pel = names.index("left_ankle_roll_link"), names.index("right_ankle_roll_link"), names.index("pelvis")
+    pel = names.index("pelvis")
     # elevated support: zmin > 0.20 for >= 0.6 s
     if _longest_run(zmin > ELEVATED_Z) >= ELEVATED_S * FPS:
         return "elevated_support"
@@ -90,15 +126,25 @@ _FOOT_GEOMS = None
 def _foot_sole_height(npz_path: str, gate: np.ndarray) -> np.ndarray:
     """Lowest point over both feet's collision capsules, for the gated frames (returns len(gate.sum()),)."""
     global _MODEL, _FOOT_GEOMS
-    import mujoco
     import re
+
+    import mujoco
 
     if _MODEL is None:
         from supermimic.data.motion_convert import load_g1_model
 
         _MODEL = load_g1_model()
-        _FOOT_GEOMS = [g for g in range(_MODEL.ngeom) if re.match(r"^(left|right)_foot[1-7]_collision$", mujoco.mj_id2name(_MODEL, mujoco.mjtObj.mjOBJ_GEOM, g) or "")]
-        assert len(_FOOT_GEOMS) == 14 and all(_MODEL.geom_type[g] == mujoco.mjtGeom.mjGEOM_CAPSULE for g in _FOOT_GEOMS)
+        _FOOT_GEOMS = [
+            g
+            for g in range(_MODEL.ngeom)
+            if re.match(
+                r"^(left|right)_foot[1-7]_collision$",
+                mujoco.mj_id2name(_MODEL, mujoco.mjtObj.mjOBJ_GEOM, g) or "",
+            )
+        ]
+        assert len(_FOOT_GEOMS) == 14 and all(
+            _MODEL.geom_type[g] == mujoco.mjtGeom.mjGEOM_CAPSULE for g in _FOOT_GEOMS
+        )
     m = _MODEL
     d = mujoco.MjData(m)
     with np.load(npz_path) as z:
@@ -155,9 +201,10 @@ def main(npz_dir: Path, workers: int = 24, out: Path | None = None) -> None:
     reasons = Counter(r for _, _, r in rows)
     kept = sum(1 for _, _, r in rows if r is None)
     name_removed = sum(1 for _, _, r in rows if r and r.startswith("name:"))
-    feas_removed = sum(1 for _, _, r in rows if r and not r.startswith("name:"))
     hours = sum(fr for _, fr, r in rows if r is None) / FPS / 3600
-    print(f"raw {len(rows)} -> after name filter {len(rows) - name_removed} (paper 129,667) -> after feasibility {kept} (paper 129,514); {hours:.2f} h kept (paper 264.56)")
+    print(
+        f"raw {len(rows)} -> after name filter {len(rows) - name_removed} (paper 129,667) -> after feasibility {kept} (paper 129,514); {hours:.2f} h kept (paper 264.56)"
+    )
     print("by reason:", dict(reasons.most_common(40)))
     print("saved", out)
 

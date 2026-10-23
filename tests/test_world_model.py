@@ -7,7 +7,7 @@ import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-NPZ = ROOT / "data/npz/lafan1"
+NPZ = ROOT / "data/npz/g1/lafan1"
 
 
 def _random_states(n, device, dtype=torch.float32):
@@ -42,7 +42,10 @@ def test_state_spec_identity_and_errors():
     np.testing.assert_allclose(s3[:, 7:36].numpy(), (s[:, 7:36] + 0.02 * s[:, 42:71]).numpy(), atol=1e-12)
 
 
-@pytest.mark.skipif(not torch.cuda.is_available() or not NPZ.exists(), reason="needs CUDA + LAFAN1 npz")
+@pytest.mark.slow
+@pytest.mark.gpu
+@pytest.mark.dataset
+@pytest.mark.skipif(not torch.cuda.is_available() or not any(NPZ.glob("*.npz")), reason="needs CUDA + LAFAN1 npz")
 def test_world_model_overfits_replay_windows():
     """Collect a little data with a random policy, fit the WM for a few hundred steps: error must drop a lot."""
     from supermimic.data.motion_convert import load_g1_model

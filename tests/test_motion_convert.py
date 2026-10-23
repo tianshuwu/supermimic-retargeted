@@ -15,10 +15,10 @@ from supermimic.data.motion_convert import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-LAFAN = ROOT / "data/raw/lafan1/g1"
+LAFAN = ROOT / "data/lafan1-retargeted/g1"
 CLIP = LAFAN / "walk1_subject1.csv"
 
-pytestmark = pytest.mark.skipif(not CLIP.exists(), reason="LAFAN1 G1 CSVs not downloaded")
+pytestmark = [pytest.mark.dataset, pytest.mark.skipif(not CLIP.exists(), reason="LAFAN1 G1 CSVs not downloaded")]
 
 
 def _signed_quat_close(q, q_ref, atol):

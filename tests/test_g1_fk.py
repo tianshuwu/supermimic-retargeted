@@ -66,6 +66,7 @@ def test_fk_matches_mujoco(dtype, atol_pos, atol_vel):
     np.testing.assert_allclose(out["lin_vel"].numpy(), lin_ref, atol=atol_vel)
 
 
+@pytest.mark.gpu
 @pytest.mark.skipif(not torch.cuda.is_available(), reason="needs CUDA")
 def test_fk_cuda_matches_cpu():
     torch.backends.cuda.matmul.allow_tf32 = False

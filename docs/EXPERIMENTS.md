@@ -1,6 +1,6 @@
 # Experiment record and limits
 
-These are selected simulation engineering runs, not a strict reproduction claim. Full numeric summaries and checkpoint SHA256 values are in `results/summary.json`; per-motion rollouts are in `results/*-lafan.json` and `results/*-bones.json`. Weights and training logs are not included in this code release.
+These are selected simulation engineering runs, not a strict reproduction claim. Full numeric summaries and checkpoint SHA256 values are in `docs/results/summary.json`; per-motion rollouts are in `docs/results/*-lafan.json` and `docs/results/*-bones.json`. Weights and training logs are not included in this code release.
 
 The active observations include `anchor_obs`. X2/A3 use 31 DOFs including two head joints, with 14 tracked bodies. Robot-ground contact is enabled, self-collision disabled, and the models use serial-joint/rigid-sole approximations. The 14-body tracking reward does not directly supervise every head joint. No real hardware tests were performed.
 

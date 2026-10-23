@@ -7,10 +7,12 @@ import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-NPZ = ROOT / "data/npz/lafan1"
+NPZ = ROOT / "data/npz/g1/lafan1"
 pytestmark = [
+    pytest.mark.gpu,
+    pytest.mark.dataset,
     pytest.mark.skipif(not torch.cuda.is_available(), reason="needs CUDA"),
-    pytest.mark.skipif(not NPZ.exists(), reason="LAFAN1 npz not built"),
+    pytest.mark.skipif(not any(NPZ.glob("*.npz")), reason="LAFAN1 npz not built"),
 ]
 
 

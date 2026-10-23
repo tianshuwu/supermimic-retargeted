@@ -7,8 +7,8 @@ import pytest
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-NPZ = ROOT / "data/npz/lafan1"
-pytestmark = pytest.mark.skipif(not torch.cuda.is_available() or not NPZ.exists(), reason="needs CUDA + LAFAN1 npz")
+NPZ = ROOT / "data/npz/g1/lafan1"
+pytestmark = [pytest.mark.gpu, pytest.mark.dataset, pytest.mark.skipif(not torch.cuda.is_available() or not any(NPZ.glob("*.npz")), reason="needs CUDA + LAFAN1 npz")]
 
 
 def test_compact_matches_full():
