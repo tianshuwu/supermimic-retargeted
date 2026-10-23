@@ -118,3 +118,80 @@ def test_g1_soma_and_bones_csv_units_and_joint_order(suffix, tmp_path):
     frame[reordered].to_csv(source, index=False)
     with pytest.raises(ValueError, match="joint columns"):
         load_csv(source)
+
+
+def test_soma_override_preserves_vendor_and_calibration(tmp_path):
+    spec = importlib.util.spec_from_file_location("retarget_cli", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    vendor = tmp_path / "vendor"
+    vendor.mkdir()
+    manifest = {
+        "name": "agibot_x2ultra",
+        "desc": {"urdf_path": "robot.urdf"},
+        "retarget_configs": {"soma": "retargeter.json"},
+    }
+    original = {
+        "ik_iterations": 24,
+        "human_robot_scaler_config": "scaler.json",
+        "post_processing": {"robot_config": "post.json"},
+        "ik_match_table": {
+            "LeftHand": {
+                "t_body": "left_wrist_pitch_link",
+                "r_body": "left_wrist_pitch_link",
+                "t_weight": 2.0,
+                "r_weight": 1.2,
+            },
+            "RightHand": {
+                "t_body": "right_wrist_roll_link",
+                "r_body": "right_wrist_roll_link",
+                "t_weight": 2.0,
+                "r_weight": 1.2,
+            },
+        },
+    }
+    scaler = {
+        "human_joint_offsets": {
+            "LeftHand": [[1, 2, 3], Rotation.from_euler("xyz", [0.1, 0.2, 0.3]).as_quat().tolist()],
+            "RightHand": [[4, 5, 6], [0, 0, 0, 1]],
+        },
+        "human_scale_ratio": 0.7,
+    }
+    for name, value in [
+        ("manifest.json", manifest),
+        ("retargeter.json", original),
+        ("scaler.json", scaler),
+        ("post.json", {"limb_stabilizer": {}}),
+    ]:
+        (vendor / name).write_text(json.dumps(value))
+    (vendor / "robot.urdf").touch()
+    before = {p.name: p.read_bytes() for p in vendor.iterdir()}
+    config = module.resolve_config("x2_ultra")
+    config["soma_override"]["manifest"] = str(vendor / "manifest.json")
+    shadow = tmp_path / "shadow"
+    actual = module.prepare_soma_config(config, shadow)
+    assert "soma_override" not in actual and "soma_override" in config
+    assert actual["extra_robot_paths"][-1] == str(shadow)
+    registered = json.loads((shadow / "manifest.json").read_text())
+    assert registered["desc"]["urdf_path"] == str(vendor / "robot.urdf")
+    patched = json.loads((shadow / registered["retarget_configs"]["soma"]).read_text())
+    for side in ["Left", "Right"]:
+        target = patched["ik_match_table"][side + "Hand"]
+        assert target["t_body"] == target["r_body"] == side.lower() + "_wrist_roll_link"
+        assert target["r_weight"] == 1.2 and target["t_weight"] == 2.0
+    assert patched["ik_iterations"] == 24
+    assert patched["post_processing"]["robot_config"] == str(vendor / "post.json")
+    calibration = json.loads(Path(patched["human_robot_scaler_config"]).read_text())
+    rotation = config["soma_override"]["scaler_frame_rotations"]["LeftHand"]
+    expected = Rotation.from_quat(
+        scaler["human_joint_offsets"]["LeftHand"][1]
+    ) * Rotation.from_rotvec(np.array(rotation["axis"]) * rotation["angle_rad"])
+    np.testing.assert_allclose(
+        calibration["human_joint_offsets"]["LeftHand"][1], expected.as_quat()
+    )
+    assert calibration["human_joint_offsets"]["LeftHand"][0] == [1, 2, 3]
+    assert (
+        calibration["human_joint_offsets"]["RightHand"]
+        == scaler["human_joint_offsets"]["RightHand"]
+    )
+    assert {p.name: p.read_bytes() for p in vendor.iterdir()} == before

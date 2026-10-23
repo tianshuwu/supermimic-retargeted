@@ -5,6 +5,7 @@ import datetime
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -20,6 +21,8 @@ def main():
     p.add_argument("--record-start-seconds", type=float, default=0.0)
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--npz-dir", type=Path)
+    p.add_argument("--no-label", action="store_true", help="For ffmpeg builds without drawtext")
+    p.add_argument("--azimuth", type=float, default=135)
     args = p.parse_args()
     ROOT = Path(__file__).resolve().parents[2]
     select_robot(args.robot, check_assets=True)
@@ -74,12 +77,27 @@ def main():
     cam = mujoco.MjvCamera()
     cam.type = mujoco.mjtCamera.mjCAMERA_FREE
     cam.distance = 3.2 if args.robot != "x2_ultra" else 2.8
-    cam.azimuth = 135
+    cam.azimuth = args.azimuth
     cam.elevation = -15
     args.out.parent.mkdir(parents=True, exist_ok=True)
+    ffmpeg = shutil.which("ffmpeg")
+    if ffmpeg is None:
+        try:
+            import imageio_ffmpeg
+        except ImportError as error:
+            raise RuntimeError("Install ffmpeg or imageio-ffmpeg to record video") from error
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    label_args = (
+        []
+        if args.no_label
+        else [
+            "-vf",
+            "drawtext=text='Solid = policy (physics)   Cyan ghost = reference':x=18:y=18:fontcolor=white:fontsize=24",
+        ]
+    )
     writer = subprocess.Popen(
         [
-            "ffmpeg",
+            ffmpeg,
             "-y",
             "-loglevel",
             "error",
@@ -96,8 +114,7 @@ def main():
             "-i",
             "-",
             "-an",
-            "-vf",
-            "drawtext=text='Solid = policy (physics)   Cyan ghost = reference':x=18:y=18:fontcolor=white:fontsize=24",
+            *label_args,
             "-c:v",
             "libx264",
             "-preset",

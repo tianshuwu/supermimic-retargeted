@@ -37,6 +37,8 @@
 
 G1 从 `assets/robots/g1/robot.xml` 读取几何模型，沿用固定版本 mjlab 的控制和碰撞配置。A3/X2 从各自 `profile.json` 读取配置；新生成 profile 的 XML 路径相对于 profile 目录解析，原有绝对路径仍受支持。
 
+X2 训练跟踪左右手的末端 `wrist_roll_link`，旧的 `wrist_yaw_link` profile 会报错。环境、动作库和想象轨迹奖励共享这套跟踪点。SOMA 的左手目标及校准由仓库 JSON 覆盖，迁移步骤见 [X2_WRIST_FIX.md](X2_WRIST_FIX.md)。
+
 ## 离线数据准备与在线 replay 分工明确
 
 `data/motion_convert.py` 提供 CSV 读取、重采样和 CPU FK。`data/prepare.py` 组织多进程转换、A3/X2 接触修正、过滤清单及审计输出。导入准备模块不会解析命令行或开始转换，每个 worker 显式初始化机器人与转换参数。

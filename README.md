@@ -16,6 +16,8 @@ Personal, AI-assisted robot adaptation of **SuperMimic-Reproduced** for **G1, A3
 
 A3/X2 的适配包括关节与状态维度、可微 FK、机器人参数、SOMA 重定向、LAFAN 骨骼坐标系及骨盆支点修正，以及脚底接触质检。`scripts/evaluation/render_policy.py` 在同一个场景中显示实体策略与半透明参考虚影；虚影不参与物理碰撞，也不进行逐帧位置对齐。
 
+X2 现已改为跟踪最终手掌，并同步修正 SOMA 左手目标和校准。已有资产、数据及检查点的迁移见 [X2 手腕修复说明](docs/X2_WRIST_FIX.md)；下方历史实验指标仍对应修复前配置。
+
 ## 代码结构
 
 核心训练保持在 `src/supermimic/` 的既有模块中；机器人适配和数据准备有独立入口。目录职责、调用关系及旧入口映射见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。

@@ -221,11 +221,13 @@ def build_soma_robot(robot, folder, root_name, anchor, suffix):
             f"{side}_ankle_roll_{suffix}",
         ]
     tracked += [anchor]
+    # G1/A3 end at yaw, but X2's palm is downstream of yaw -> pitch -> roll.
+    wrist = "roll" if robot == "x2_ultra" else "yaw"
     for side in ["left", "right"]:
         tracked += [
             f"{side}_shoulder_roll_{suffix}",
             f"{side}_elbow_{suffix}",
-            f"{side}_wrist_yaw_{suffix}",
+            f"{side}_wrist_{wrist}_{suffix}",
         ]
     for name in tracked:
         assert mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, name) >= 0, name

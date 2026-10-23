@@ -17,7 +17,12 @@ bash scripts/run_local.sh scripts/data/retarget.py --robot g1 --batch-size 2
 
 These JSON files configure the batch job. IK matching, human-to-robot scaling and
 postprocessing settings are provided by the pinned SOMA target registry under
-`vendor/soma-retargeter/soma_retargeter/assets/robotics/`. G1's SOMA description is
+`vendor/soma-retargeter/soma_retargeter/assets/robotics/`. X2 additionally applies
+the checked-in `soma_override` for terminal-palm IK and its matching calibration
+rotation. The launcher creates a temporary SOMA registry override; vendor files
+remain unchanged. Details and migration steps: [X2 wrist correction](../../docs/X2_WRIST_FIX.md).
+
+G1's SOMA description is
 `unitree/g1/desc/mjcf/g1_29dof_rev_1_0.xml`; its training description is the separate
 local `assets/robots/g1/robot.xml` imported from mjlab. They share the 29-joint
 schema but are different source assets. Editing one does not update the other.

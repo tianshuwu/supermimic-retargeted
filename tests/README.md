@@ -23,6 +23,8 @@ SM_ROBOT=g1 bash scripts/run_local.sh -m pytest tests -m "not slow" -q -ra
 | `test_entrypoints.py`, `test_source_tracking.py`, `test_retarget.py` | CLI selection/imports, Git ignore boundaries, retarget configs, G1 CSV units and schema | Main environment; A3/X2 CLI cases skip if profiles are absent |
 | `test_local_robot_assets.py`, `test_g1_fk.py` | Local G1 asset independence, MuJoCo/Torch FK, gradients | Built G1; one FK comparison needs CUDA |
 | `test_embodiments.py` | A3/X2 FK, velocities and gradients | Corresponding built assets; otherwise skip |
+| `test_x2_wrist_tracking.py` | Palm reward gradients, reference modes, calibrated SOMA frame change and old-profile rejection | X2 assets/sources for model cases; synthetic motion, no dataset download |
+| `test_hand_tracking_acceptance.py` | Reject apparent left/right parity caused by right-hand degradation, persistent roll error or early termination | CPU; synthetic metric reports |
 | `test_preparation.py` | Two spawn workers match serial conversion on synthetic motion | Built G1; no downloaded NPZ baseline needed |
 | `test_motion_convert.py` | Real LAFAN resampling and CPU FK against reference calculations | `data/lafan1-retargeted/g1/walk1_subject1.csv` |
 | `test_env_smoke.py`, `test_analytic_heads.py`, `test_motion_library_compact.py` | Simulation, replay, analytical rewards/observations, compact storage | CUDA and `data/npz/g1/lafan1/*.npz` |

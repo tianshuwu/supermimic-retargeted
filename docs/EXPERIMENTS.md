@@ -2,6 +2,11 @@
 
 These are selected simulation engineering runs, not a strict reproduction claim. Full numeric summaries and checkpoint SHA256 values are in `docs/results/summary.json`; per-motion rollouts are in `docs/results/*-lafan.json` and `docs/results/*-bones.json`. Weights and training logs are not included in this code release.
 
+The archived X2 runs predate the [terminal-palm tracking correction](X2_WRIST_FIX.md).
+They used wrist-yaw tracking bodies and the original SOMA left-hand mapping.
+The corrected defaults change the hand reward/reference semantics; new runs need
+fresh evaluation and must not inherit the archived scores.
+
 The active observations include `anchor_obs`. X2/A3 use 31 DOFs including two head joints, with 14 tracked bodies. Robot-ground contact is enabled, self-collision disabled, and the models use serial-joint/rigid-sole approximations. The 14-body tracking reward does not directly supervise every head joint. No real hardware tests were performed.
 
 Each embodiment trained on two RTX 6000D GPUs with 4096 environments per rank, replay capacity 512, and policy batch 2048. LAFAN baselines used all 40 clips (2.4506 hours). X2/A3 policies/critics were initialized afresh for corrected references, with a world-model warmstart from earlier adaptation attempts. G1 retained the upstream G1 reference. Checkpoint selection used full deterministic clip rollouts, no noise or domain randomization, starting from the first reference frame.

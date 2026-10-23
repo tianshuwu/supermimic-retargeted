@@ -6,5 +6,24 @@
   "retarget_source": "soma",
   "retarget_target": "agibot_x2ultra",
   "retarget_source_facing_direction": "Mujoco",
-  "extra_robot_paths": []
+  "extra_robot_paths": [],
+  "soma_override": {
+    "manifest": "vendor/soma-retargeter/soma_retargeter/assets/robotics/agibot/x2/manifest.json",
+    "ik_match_table": {
+      "LeftHand": {
+        "t_body": "left_wrist_roll_link",
+        "r_body": "left_wrist_roll_link"
+      },
+      "RightHand": {
+        "t_body": "right_wrist_roll_link",
+        "r_body": "right_wrist_roll_link"
+      }
+    },
+    "scaler_frame_rotations": {
+      "LeftHand": {
+        "axis": [1.0, 0.0, 0.0],
+        "angle_rad": -0.2131177634
+      }
+    }
+  }
 }

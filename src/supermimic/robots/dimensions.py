@@ -15,6 +15,14 @@ if ROBOT != "g1":
     PROFILE = json.loads(_profile_path.read_text())
     if PROFILE["robot"] != ROBOT:
         raise ValueError(f"Profile {_profile_path} does not describe {ROBOT}")
+    if ROBOT == "x2_ultra" and not {"left_wrist_roll_link", "right_wrist_roll_link"}.issubset(
+        PROFILE.get("tracked_bodies", [])
+    ):
+        raise ValueError(
+            f"Outdated X2 hand tracking in {_profile_path}: track both wrist_roll_link palms. "
+            "Back up custom assets before rebuilding with "
+            "scripts/setup/build_robot_assets.py --robot x2_ultra"
+        )
     _xml = Path(PROFILE["xml_path"])
     if not _xml.is_absolute():
         PROFILE["xml_path"] = str((_profile_path.parent / _xml).resolve())
